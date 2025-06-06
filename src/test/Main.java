@@ -40,6 +40,8 @@ public class Main extends Application {
         ComboBox<String> loggerSelector = new ComboBox<>();
         loggerSelector.getItems().addAll("Console", "File", "Database");
         loggerSelector.setValue("Console");
+        
+
 
         loggerSelector.setOnAction(e -> {
             String selected = loggerSelector.getValue();
@@ -89,6 +91,12 @@ public class Main extends Application {
         projectSelector.setValue(1);
 
         // Buttons for Save, Load, and Clear
+        Button redoButton = new Button("↪️ Redo");
+        redoButton.setStyle("-fx-background-color: #009688; -fx-text-fill: white;");
+        redoButton.setOnAction(e -> controller.redoLastShape());
+        Button undoButton = new Button("↩️ Undo");
+        undoButton.setStyle("-fx-background-color: #ff9800; -fx-text-fill: white;");
+        undoButton.setOnAction(e -> controller.undoLastShape());
         Button saveButton = new Button("💾 Save Drawing");
         Button loadButton = new Button("📂 Load Drawing");
         Button clearButton = new Button("🗑️ Clear Drawing");
@@ -124,7 +132,7 @@ public class Main extends Application {
                 new Label("Select Shape:"), shapeSelector,
                 new Label("Select Color:"), colorPicker,
                 new Label("Select Project ID:"), projectSelector,
-                saveButton, loadButton, clearButton);
+                saveButton, loadButton, clearButton, undoButton,redoButton);
         controls.setPadding(new Insets(15));
         controls.setStyle("-fx-background-color: #f9f9f9; -fx-border-color: #ccc; -fx-border-radius: 5; -fx-border-width: 1;");
         controls.setPrefWidth(200);

@@ -99,6 +99,16 @@ public class DrawingDAO {
         }
         return shapes;
     }
+    public void deleteShapesForProject(int projectId) {
+        String sql = "DELETE FROM shapes WHERE project_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, projectId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la suppression : " + e.getMessage());
+        }
+    }
+
 
 
 }

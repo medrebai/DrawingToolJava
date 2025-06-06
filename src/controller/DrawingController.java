@@ -6,6 +6,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import logger.LoggerStrategy;
+import model.Edge;
+import model.Node;
 import model.Shape;
 
 import java.util.ArrayList;
@@ -18,6 +20,12 @@ public class DrawingController {
     private Canvas canvas;
     private List<Shape> shapes;
     private DrawingDAO drawingDAO;
+    private List<Node> nodes = new ArrayList<>();
+    private List<Edge> edges = new ArrayList<>();
+    private int nodeCounter = 0;
+    private List<Shape> undoneShapes = new ArrayList<>();
+
+
 
     public DrawingController(Canvas canvas, LoggerStrategy logger, DrawingDAO drawingDAO) {
         this.canvas = canvas;
@@ -63,9 +71,11 @@ public class DrawingController {
     }
 
     public void saveDrawing(int projectId) {
-        drawingDAO.saveShapes(projectId, shapes);
+        drawingDAO.deleteShapesForProject(projectId); // 🗑️ Supprime les formes existantes
+        drawingDAO.saveShapes(projectId, shapes);     // 💾 Sauvegarde les nouvelles formes
         logger.log("Dessin sauvegardé pour le projet ID : " + projectId);
     }
+
 
     public void loadDrawing(int projectId) {
         shapes = drawingDAO.loadShapes(projectId);
@@ -74,10 +84,41 @@ public class DrawingController {
     }
 
     public void clearDrawing() {
+        int nbShapes = shapes.size();
         shapes.clear();
         redraw();
-        logger.log("Canvas vidé !");
+        logger.log("Canvas vidé et " + nbShapes + " formes supprimées du tableau !");
     }
+    
+
+    public void addNode(double x, double y) {
+        Node node = new Node(nodeCounter++, x, y);
+        nodes.add(node);
+        redraw();
+        logger.log("Nœud ajouté : " + node.getId() + " à (" + x + ", " + y + ")");
+    }
+    public void undoLastShape() {
+        if (!shapes.isEmpty()) {
+            Shape removedShape = shapes.remove(shapes.size() - 1);
+            undoneShapes.add(removedShape); // On sauvegarde la forme annulée
+            redraw();
+            logger.log("Forme annulée : " + removedShape.getClass().getSimpleName());
+        } else {
+            logger.log("Aucune forme à annuler !");
+        }
+    }
+    public void redoLastShape() {
+        if (!undoneShapes.isEmpty()) {
+            Shape restoredShape = undoneShapes.remove(undoneShapes.size() - 1);
+            shapes.add(restoredShape);
+            redraw();
+            logger.log("Forme restaurée : " + restoredShape.getClass().getSimpleName());
+        } else {
+            logger.log("Aucune forme à restaurer !");
+        }
+    }
+
+
 
 
 }
