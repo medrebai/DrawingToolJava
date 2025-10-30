@@ -194,7 +194,4 @@ Supports three modes:
 
 This modular architecture, together with SOLID principles and design patterns, makes the application **maintainable, extensible, and robust**.
 
-```
-
-If you want, I can also **add a slick GIF/demo section** for GitHub README to make it look like a professional open-source project. It’ll make the project pop instantly. Do you want me to do that?
-```
+``````
