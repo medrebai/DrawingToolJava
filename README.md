@@ -1,4 +1,3 @@
-Here’s your GitHub `README.md` in proper Markdown format, ready to copy-paste:
 
 ```markdown
 # DrawingToolJava
